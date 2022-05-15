@@ -1,0 +1,10 @@
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "pdfExportSettings": {
+    "pageSize": "A3",
+    "landscape": true,
+    "margin": "0",
+    "downscalePercent": 100
+  }
+}
