@@ -11,9 +11,12 @@
   h5, h6 {
 	font-style: normal;
   }
+  .indent {
+    margin-left: 30px;
+  }
   p > code, h3 > code, h4 > code, h5 > code, h6 > code {
 	color: #ae1212;
-	background-color: rgb(188, 188,188, .24);
+	background-color: rgb(188, 188,188, .15);
 	padding: 4px;
 	border-radius: 5px;
   }
@@ -22,6 +25,15 @@
   border-radius: 5px;
   background-color: #f6f6f6;
   padding: 5px 12px;
+  }
+  .param {
+    background-color: #e8e8e8;
+    padding: 3px 10px;
+    color: #2d2626;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 0.9em;
   }
   mark {
 	background-color: transparent;
@@ -35,9 +47,23 @@
 	  color: #ef5353;
 	  text-transform: lowercase;
   }
+  mark.required::after {
+    content: "обязательное";
+    color: #ef5353;
+    display: inline-block;
+    top: -1px;
+    position: relative;
+  }
   mark.optional {
 	  color: #9b9b9b;
 	  text-transform: lowercase;
+  }
+  mark.optional::after {
+    color: #9b9b9b;
+    content: "необязательное";
+    display: inline-block;
+    top: -1px;
+    position: relative;
   }
 </style>
 
@@ -123,7 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ##### Параметры `mtsModule.createButtonElement`
 
-**theme** <mark class="optional">Необязательное</mark>
+
+<i class="param">theme</i> <mark class="optional"></mark>
 
 Тема кнопки. Может принимать значения:
 
@@ -133,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 `white` - белый фон кнопки
 
-**phrase** <mark class="optional">Необязательное</mark>
+<i class="param">phrase</i> <mark class="optional"></mark>
 
 Текст внутри кнопки. Может принимать значения:
 
@@ -180,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 #### 3.2 Передача параметров платежа
-Для передачи параметров платежа, требуется создать экземпляр объекта `mtsModule`, который был передан в `onReady`, а затем его проинициализировать (`init()`) 
+Для передачи параметров платежа, требуется создать экземпляр объекта `mtsModule`, который был передан в `onReady`, а затем его проинициализировать `init()`
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
@@ -229,51 +256,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ##### Параметры, которые может принимать `new mtsModule`
 
-###### **merchant** <mark class="required">Обязательное</mark>
+<i class="param">merchant</i> <mark class="required"></mark>
 
-**login** <mark class="required">Обязательное</mark>
+Объект с информацией о продавце. Содержит в себе параметр `login`
 
-###### **order** <mark class="required">Обязательное</mark>
+<div class="indent">
+<div><i class="param">login</i> <mark class="required"></mark></div>
+Логин продавца(мерчанта) в платежном шлюзе. Выдается мерчанту при регистрации в платежном шлюзе. Можно уточнить у поддержки.
+</div>
 
-**amount** <mark class="required">Обязательное</mark>
+<i class="param">order</i> <mark class="required"></mark>
 
-**currency** <mark class="required">Обязательное</mark>
+Объект с информацией о заказе. Содержит в себе следующие параметры:
 
-**returnUrl** <mark class="required">Обязательное</mark> ???? спросить антона
+<i class="param">amount</i> <mark class="required"></mark>
 
-**clientId** <mark class="optional">Необязательное</mark> 
+Сумма заказа в <u>копейках</u>. Например, для 5 рублей 30 копеек - 530.
+ 
+<i class="param">currency</i> <mark class="required"></mark> ???
 
-**orderNumber** <mark class="optional">Необязательное</mark> 
+Валюта заказа. Циферный код валюты согласно [ISO 4217](https://www.iso.org/ru/iso-4217-currency-codes.html) 
+Например, RUB - 643, USD - 840, EUR - 978
 
-**depositFlag** <mark class="optional">Необязательное</mark> 
-
-**sessionExpiredDate** <mark class="optional">Необязательное</mark> 
-
-**description** <mark class="optional">Необязательное</mark> 
-
-**orderParams** <mark class="optional">Необязательное</mark> 
-
-**orderBundle** <mark class="optional">Необязательное</mark> 
+<i class="param">returnUrl</i> <mark class="required"></mark> ???? спросить антона
+ 
+<i class="param">clientId</i> <mark class="optional"></mark> 
+ 
+<i class="param">orderNumber</i> <mark class="optional"></mark> 
+ 
+<i class="param">depositFlag</i> <mark class="optional"></mark> 
+ 
+<i class="param">sessionExpiredDate</i> <mark class="optional"></mark> 
+ 
+<i class="param">description</i> <mark class="optional"></mark> 
+ 
+<i class="param">orderParams</i> <mark class="optional"></mark> 
+ 
+<i class="param">orderBundle</i> <mark class="optional"></mark> 
 
 ...
 
-**features** <mark class="optional">Необязательное</mark> 
-
-**taxSystem** <mark class="optional">Необязательное</mark> 
-
-**email** <mark class="optional">Необязательное</mark> 
-
-**phone** <mark class="optional">Необязательное</mark> 
-
-**postAddress** <mark class="optional">Необязательное</mark> 
-
-**terminalId** <mark class="optional">Необязательное</mark> 
-
-**additionalOfdParams** <mark class="optional">Необязательное</mark> 
-
-**billingPayerData** <mark class="optional">Необязательное</mark> 
+<i class="param">features</i> <mark class="optional"></mark> 
+ 
+<i class="param">taxSystem</i> <mark class="optional"></mark> 
+ 
+<i class="param">email</i> <mark class="optional"></mark> 
+ 
+<i class="param">phone</i> <mark class="optional"></mark> 
+ 
+<i class="param">postAddress</i> <mark class="optional"></mark> 
+ 
+<i class="param">terminalId</i> <mark class="optional"></mark> 
+ 
+<i class="param">additionalOfdParams</i> <mark class="optional"></mark> 
+ 
+<i class="param">billingPayerData</i> <mark class="optional"></mark> 
 ...
 
-###### **successUrl** <mark class="optional">Необязательное</mark>
+###### <i class="param">successUrl</i> <mark class="optional"></mark>
 
-###### **failUrl** <mark class="optional">Необязательное</mark>
+###### <i class="param">failUrl</i> <mark class="optional"></mark>
