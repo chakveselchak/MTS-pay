@@ -82,8 +82,8 @@
   ],
   "defaultExportDirectoryMode": "Auto",
   "openExportedFile": true,
-  "version": "1.0.7",
-  "showOverwriteConfirmation": true,
+  "version": "1.0.6",
+  "showOverwriteConfirmation": false,
   "lastExportDirectory": {
     "darwin": "/Users/andreykuznetsov/Documents"
   },

@@ -2,7 +2,7 @@
   body {
     max-width: 60em;
   }
-  h1, h2, h3, h4,h5, h6, p {
+  h1, h2, h3, h4,h5, h6, p, i {
 	  font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   }
   h1,h2,h3,h4,h5mh6 {
@@ -11,8 +11,12 @@
   h5, h6 {
 	font-style: normal;
   }
+  p {
+    font-size: 0.9em;
+  }
   .indent {
-    margin-left: 30px;
+    padding-left: 30px;
+    border-left: 2px solid #f1f1f1;
   }
   p > code, h3 > code, h4 > code, h5 > code, h6 > code {
 	color: #ae1212;
@@ -34,36 +38,50 @@
     font-weight: bold;
     display: inline-block;
     margin-top: 0.9em;
+    font-style: normal;
   }
   mark {
 	background-color: transparent;
 	font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
 	font-size: 12px;
-	margin-left: 15px;
+	margin-left: 12px;
 	padding-left: 15px;
 	border-left: 1px solid #c6c6c6;
+	text-transform: lowercase;
   }
-  mark.required {
-	  color: #ef5353;
-	  text-transform: lowercase;
+ mark::after {
+    display: inline-block;
+    top: -1px;
+    position: relative;
+    text-transform: lowercase;
+ }
+ mark.number::after {
+    content: "number";
+	color: #9b9b9b;
+  }
+ mark.object::after {
+    content: "object";
+	color: #9b9b9b;
+  }
+  mark.string::after {
+    content: "string";
+	color: #9b9b9b;
+  }
+  mark.array::after {
+    content: "array";
+	color: #9b9b9b;
+  }
+  mark.function::after {
+    content: "funtion";
+	color: #9b9b9b;
   }
   mark.required::after {
     content: "обязательное";
     color: #ef5353;
-    display: inline-block;
-    top: -1px;
-    position: relative;
-  }
-  mark.optional {
-	  color: #9b9b9b;
-	  text-transform: lowercase;
   }
   mark.optional::after {
     color: #9b9b9b;
     content: "необязательное";
-    display: inline-block;
-    top: -1px;
-    position: relative;
   }
 </style>
 
@@ -120,16 +138,16 @@ MTS Pay - собой способ оплаты на сайте в виде ст�
 </script>
 ```
 
-MTS Pay асинхронно инициализируется, поэтому вся работа со модулем происходит в функции `window.MtsPay.OnReady((mtsModule) => {...})`
+MTS Pay асинхронно инициализируется, поэтому вся работа со модулем происходит в функции `window.mtsPayModule.OnReady((MtsPay) => {...})`
 
 #### 3.1 Рендер кнопки
-Для отрисовки кнопки требуется вызвать функцию `mtsModule.createButtonElement`
+Для отрисовки кнопки требуется вызвать функцию `MtsPay.createButtonElement`
 
 ```js
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
-		window.MtsPay.onReady((mtsModule) => {
-			const mtsPayButtonElement = mtsModule.createButtonElement(); // 
+		window.mtsPayModule.onReady((MtsPay) => {
+			const mtsPayButtonElement = MtsPay.createButtonElement();  
 			document.querySelector('.mts-pay__container').append(mtsPayButtonElement);
 		});
 	});
@@ -140,17 +158,17 @@ MTS Pay асинхронно инициализируется, поэтому в
 <div id ="example1"></div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-	window.MtsPay.onReady((mtsModule) => {
-		const mtsPayButtonElement = mtsModule.createButtonElement();
+	window.mtsPayModule.onReady((MtsPay) => {
+		const mtsPayButtonElement = MtsPay.createButtonElement();
 		document.querySelector('#example1').append(mtsPayButtonElement);
 	});
 });
 </script>
 
-##### Параметры `mtsModule.createButtonElement`
+##### Параметры `MtsPay.createButtonElement`
 
 
-<i class="param">theme</i> <mark class="optional"></mark>
+<i class="param">theme</i> <mark class="optional"></mark>  <mark class="string"></mark>
 
 Тема кнопки. Может принимать значения:
 
@@ -160,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 `white` - белый фон кнопки
 
-<i class="param">phrase</i> <mark class="optional"></mark>
+<i class="param">phrase</i> <mark class="optional"></mark> <mark class="string"></mark>
 
 Текст внутри кнопки. Может принимать значения:
 
@@ -188,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <div id ="example2"></div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-	window.MtsPay.onReady((mtsModule) => {
-		const mtsPayButtonElement = mtsModule.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
+	window.mtsPayModule.onReady((MtsPay) => {
+		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
 		document.querySelector('#example2').append(mtsPayButtonElement);
 	});
 });
@@ -199,8 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
 <div id ="example2"></div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-	window.MtsPay.onReady((mtsModule) => {
-		const mtsPayButtonElement = mtsModule.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
+	window.mtsPayModule.onReady((MtsPay) => {
+		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
 		document.querySelector('#example2').append(mtsPayButtonElement);
 	});
 });
@@ -211,11 +229,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
-    window.MtsPay.onReady((mtsModule) => {
-        const mtsPayButtonElement = mtsModule.createButtonElement({ phrase: 'Купить'});
+    window.mtsPayModule.onReady((MtsPay) => {
+        const mtsPayButtonElement = MtsPay.createButtonElement({ phrase: 'Купить'});
         document.querySelector('#example3').append(mtsPayButtonElement);
 
-        const mtsPaySession = new mtsModule({
+        const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
               login: 'merchantLogin',
@@ -231,15 +249,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
+
 При инициализации сессии, кнопка становится кликабельной.
+
 <div id ="example3"></div>
 
 <script>
-    window.MtsPay.onReady((mtsModule) => {
-        const mtsPayButtonElement = mtsModule.createButtonElement({ phrase: 'Купить'});
+    window.mtsPayModule.onReady((MtsPay) => {
+        const mtsPayButtonElement = MtsPay.createButtonElement({ phrase: 'Купить'});
         document.querySelector('#example3').append(mtsPayButtonElement);
 
-        const mtsPaySession = new mtsModule({
+        const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
               login: 'merchantLogin',
@@ -256,46 +276,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ##### Параметры, которые может принимать `new mtsModule`
 
-<i class="param">merchant</i> <mark class="required"></mark>
+<i class="param">merchant</i> <mark class="required"></mark> <mark class="object"></mark>
 
 Объект с информацией о продавце. Содержит в себе параметр `login`
 
 <div class="indent">
-<div><i class="param">login</i> <mark class="required"></mark></div>
+<div><i class="param">login</i> <mark class="required"></mark> <mark class="string"></mark></div>
 Логин продавца(мерчанта) в платежном шлюзе. Выдается мерчанту при регистрации в платежном шлюзе. Можно уточнить у поддержки.
 </div>
 
-<i class="param">order</i> <mark class="required"></mark>
+<i class="param">order</i> <mark class="required"></mark> <mark class="object"></mark>
 
 Объект с информацией о заказе. Содержит в себе следующие параметры:
 
-<i class="param">amount</i> <mark class="required"></mark>
+<div class="indent">
+<div><i class="param">amount</i> <mark class="required"></mark> <mark class="string"></mark></div>
 
-Сумма заказа в <u>копейках</u>. Например, для 5 рублей 30 копеек - 530.
+Сумма заказа в <u>минорных единицах</u>. Например, для 5 рублей 30 копеек - 530.
  
-<i class="param">currency</i> <mark class="required"></mark> ???
+<div><i class="param">currency</i> <mark class="required"></mark><mark class="string"></mark></div>
+Валюта заказа. Циферный код валюты согласно [ISO 4217](https://www.iso.org/ru/iso-4217-currency-codes.html) <br>
+Например, RUB - 643, USD - 840, EUR - 978 <br>
+Значение по умолчанию: `643`
 
-Валюта заказа. Циферный код валюты согласно [ISO 4217](https://www.iso.org/ru/iso-4217-currency-codes.html) 
-Например, RUB - 643, USD - 840, EUR - 978
+<i class="param">clientId</i> <mark class="optional"></mark> <mark class="string"></mark>
 
-<i class="param">returnUrl</i> <mark class="required"></mark> ???? спросить антона
+Идентификатор клиента. Требуется для функционала "Сохраненные карты"(связки), когда система узнает пользователя и предлагает к оплате карты, которые он сохранял ранее.
+
+<i class="param">orderNumber</i> <mark class="optional"></mark> <mark class="string"></mark> 
+
+Номер заказа в системе магазина. Можно не указывать, если в платежном шлюзе  выставлена настройка "Система генерирует номер заказа".
  
-<i class="param">clientId</i> <mark class="optional"></mark> 
+<i class="param">depositFlag</i> <mark class="optional"></mark> <mark class="string"></mark>
+
+Флаг двухстадийной оплаты. Может принимать 2 значения:
+`PRE_AUTH` - двустадийный платеж
+`PURCHASE` - одностадийный платеж
+Значение по умолчанию: `PURCHASE`;
  
-<i class="param">orderNumber</i> <mark class="optional"></mark> 
+<i class="param">sessionExpiredDate</i> <mark class="optional"></mark> <mark class="string"></mark>
  
-<i class="param">depositFlag</i> <mark class="optional"></mark> 
+<i class="param">description</i> <mark class="optional"></mark> <mark class="string"></mark>
  
-<i class="param">sessionExpiredDate</i> <mark class="optional"></mark> 
+<i class="param">orderParams</i> <mark class="optional"></mark> <mark class="object"></mark>
  
-<i class="param">description</i> <mark class="optional"></mark> 
- 
-<i class="param">orderParams</i> <mark class="optional"></mark> 
- 
-<i class="param">orderBundle</i> <mark class="optional"></mark> 
+<i class="param">orderBundle</i> <mark class="optional"></mark> <mark class="object"></mark>
 
 ...
 
+</div>
 <i class="param">features</i> <mark class="optional"></mark> 
  
 <i class="param">taxSystem</i> <mark class="optional"></mark> 

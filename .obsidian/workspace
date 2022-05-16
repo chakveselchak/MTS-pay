@@ -112,21 +112,13 @@
                 "useHierarchy": true
               }
             }
-          },
-          {
-            "id": "2a93d6f2c8cc6c1a",
-            "type": "leaf",
-            "state": {
-              "type": "side-panel-control-view",
-              "state": {}
-            }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "active": "804e2c641e30290f",
   "lastOpenFiles": [
