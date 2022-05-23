@@ -2,7 +2,7 @@
   body {
     max-width: 60em;
   }
-  h1, h2, h3, h4,h5, h6, p, i, ul a {
+  h1, h2, h3, h4,h5, h6, p, i, ul a, .toastify {
 	  font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   }
   h1,h2,h3,h4,h5mh6 {
@@ -95,6 +95,9 @@
     color: #9b9b9b;
     content: "необязательное";
   }
+.toastify {
+  font-size: 12px;
+}
 </style>
 
 
@@ -629,6 +632,164 @@ mtsPaySession.on(MtsPay.Event.ChangePaymentStatus, ({ status, orderId }) => {
   console.log(`Статус заказа: ${status}. Номер заказа ${orderId}`);
 });
 ```
+
+### Пример
+```js
+const bgColors = [
+  "linear-gradient(to right, #00b09b, #96c93d)",
+  "linear-gradient(to right, #ff5f6d, #ffc371)",
+  "linear-gradient(to right, #43514f, #7f9492)",
+];
+
+function showToast(text, colorIndex) {
+  Toastify({
+    text: text,
+    duration: 6000,
+    
+    style: {
+      background: bgColors[colorIndex],
+    }
+  }).showToast();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.mtsPayModule.onReady((MtsPay) => {
+    // Создание кнопки MtsPay
+    const mtsPayButtonElement = MtsPay.createButtonElement({ phrase: 'Купить'});
+    document.querySelector('#example5').append(mtsPayButtonElement);
+
+    // Описание платежной сессии заказа
+    const mtsPaySession = new MtsPay({
+        buttonElement: mtsPayButtonElement,
+        merchant: {
+            login: 'mtsPayTestMerchant',
+        },
+        order: {
+            description: 'Герои Меча и Магии',
+            orderNumber: new Date().getTime().toString(),
+            amount: 101500,
+            phone: '9000000000',
+            email: 'test@test.ru'
+        }
+    });
+
+    // Инициализация платежной сессии  
+    mtsPaySession.init();
+
+    // Слушаем события MTS Pay
+    mtsPaySession.on(MtsPay.Event.ChangePaymentStatus, ({ status, orderId }) => {
+      if (MtsPay.PendingStatuses.includes(status)) {
+          showToast('🕒️ Завершение операции.', 2);
+          
+        } else if (MtsPay.SuccessfulStatuses.includes(status)) {
+          showToast('✔️ Оплата выполнена УСПЕШНО', 0);
+          
+        } else {
+          showToast('❌ Оплата выполнена НЕУСПЕШНО.', 1);
+        }
+
+        showToast(`Статус заказа: ${status}. Номер заказа ${orderId}`, 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+        showToast('Пользователь нажал кнопку оплаты', 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.CloseDialog, () => {
+        showToast('Пользователь закрыл окно оплаты', 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.UnfinishedOperation, () => {
+        showToast('Пользователь закрыл окно в момент опроса статуса оплаты', 2);
+      });
+
+      mtsPaySession.on('*', (event, data) => {
+        showToast(`${event}: ${JSON.stringify(data)}`, 2);
+      });
+  });
+}); 
+
+```
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<div id ="example5"></div>
+<script>
+const bgColors = [
+  "linear-gradient(to right, #00b09b, #96c93d)",
+  "linear-gradient(to right, #ff5f6d, #ffc371)",
+  "linear-gradient(to right, #43514f, #7f9492)",
+];
+
+function showToast(text, colorIndex) {
+  Toastify({
+    text: text,
+    duration: 3000,
+    style: {
+      background: bgColors[colorIndex],
+    }
+  }).showToast();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.mtsPayModule.onReady((MtsPay) => {
+    // Создание кнопки MtsPay
+    const mtsPayButtonElement = MtsPay.createButtonElement({ phrase: 'Купить'});
+    document.querySelector('#example5').append(mtsPayButtonElement);
+
+    // Описание платежной сессии заказа
+    const mtsPaySession = new MtsPay({
+        buttonElement: mtsPayButtonElement,
+        merchant: {
+            login: 'mtsPayTestMerchant',
+        },
+        order: {
+            description: 'Герои Меча и Магии',
+            orderNumber: new Date().getTime().toString(),
+            amount: 101500,
+            phone: '9000000000',
+            email: 'test@test.ru'
+        }
+    });
+
+    // Инициализация платежной сессии  
+    mtsPaySession.init();
+
+    // Слушаем события MTS Pay
+    mtsPaySession.on(MtsPay.Event.ChangePaymentStatus, ({ status, orderId }) => {
+      if (MtsPay.PendingStatuses.includes(status)) {
+          showToast('🕒️ Завершение операции.', 2);
+          
+        } else if (MtsPay.SuccessfulStatuses.includes(status)) {
+          showToast('✔️ Оплата выполнена УСПЕШНО', 0);
+          
+        } else {
+          showToast('❌ Оплата выполнена НЕУСПЕШНО.', 1);
+        }
+
+        showToast(`Статус заказа: ${status}. Номер заказа ${orderId}`, 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+        showToast('Пользователь нажал кнопку оплаты', 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.CloseDialog, () => {
+        showToast('Пользователь закрыл окно оплаты', 2);
+      });
+
+      mtsPaySession.on(MtsPay.Event.UnfinishedOperation, () => {
+        showToast('Пользователь закрыл окно в момент опроса статуса оплаты', 2);
+      });
+
+      mtsPaySession.on('*', (event, data) => {
+	      debugger;
+        showToast(`${event}: ${JSON.stringify(data)}`, 2);
+      });
+  });
+}); 
+</script>
 
 ## Определения статуса платежа
 Для корректного и честного определения, что оплата по MTS Pay прошла рекомендуется делать реализацию через бек-офиc (backend).
