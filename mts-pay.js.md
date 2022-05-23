@@ -75,6 +75,10 @@
     content: "string";
 	color: #9b9b9b;
   }
+  mark.boolean::after {
+    content: "boolean";
+	color: #9b9b9b;
+  }
   mark.array::after {
     content: "array";
 	color: #9b9b9b;
@@ -105,6 +109,8 @@
 	- [3.2 Передача параметров платежа](#передача-параметров-платежа)
 		- [Параметры `new MtsPay({})`](#параметры-new-mtspay)
 		- [Пример MTS Pay c корзиной](#пример-mts-pay-c-корзиной)
+- [События MTS Pay](#cобытия-mts-pay)
+- [Определения статуса платежа](#определения-статуса-платежа)
 - [Тестовые данные для проверки](#тестовые-данные-для-проверки)
 
 
@@ -249,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
-              login: 'merchantLogin',
+              login: 'mtsPayTestMerchant',
             },
             order: {
               description: 'Автомобиль DeLorean DMC-12',
@@ -275,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
-              login: 'merchantLogin',
+              login: 'mtsPayTestMerchant',
             },
             order: {
               description: 'Автомобиль DeLorean DMC-12',
@@ -291,7 +297,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <i class="param">merchant</i> <mark class="required"></mark> <mark class="object"></mark>
 
-Объект с информацией о продавце. Содержит в себе параметр `login`
+Объект с информацией о продавце. <br>
+Содержит в себе параметр `login`
 
 <div class="indent">
 <div><i class="param">login</i> <mark class="required"></mark> <mark class="string"></mark></div>
@@ -300,7 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <i class="param">order</i> <mark class="required"></mark> <mark class="object"></mark>
 
-Объект с информацией о заказе. Содержит в себе следующие параметры:
+Объект с информацией о заказе. <br>
+Содержит в себе следующие параметры:
 
 <div class="indent">
 <div><i class="param">amount</i> <mark class="required"></mark> <mark class="number"></mark></div>
@@ -322,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
  
 <i class="param">depositFlag</i> <mark class="optional"></mark> <mark class="string"></mark>
 
-Флаг двухстадийной оплаты. Может принимать 2 значения:
+Флаг двухстадийной оплаты. Может принимать 2 значения:<br>
 `PRE_AUTH` - двустадийный платеж<br>
 `PURCHASE` - одностадийный платеж<br>
 Значение по умолчанию: `PURCHASE`;
@@ -459,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
-                login: 'merchantLogin',
+                login: 'mtsPayTestMerchant',
             },
             order: {
                 description: 'Спортивные товары в SportSensey',
@@ -516,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mtsPaySession = new MtsPay({
             buttonElement: mtsPayButtonElement,
             merchant: {
-                login: 'merchantLogin',
+                login: 'mtsPayTestMerchant',
             },
             order: {
                 description: 'Спортивные товары в SportSensey',
@@ -561,6 +569,106 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 
+## Cобытия MTS Pay
+MTS Pay имеет внутренние события для более гибкой настройки платежа. События позволяют сайту магазина (который использует MTS Pay) гибко реагировать на поведение пользователя внутри MTS Pay. <br>
+Событие нужно передавать как параметр в функцию `mtsPaySession.on()`
+
+
+### MtsPay.Event.ClickButton
+Пользователь нажал кнопку оплаты MTS Pay. <br>
+Пример:
+```js
+mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+  // Ваш код, который выполнится после того как пользователь нажал кнопку оплаты MTS Pay
+  console.info('Пользователь нажал кнопку оплаты');
+});
+```
+
+### MtsPay.Event.CloseDialog
+Пользователь закрыл окно оплаты.<br>
+Пример:
+```js
+mtsPaySession.on(MtsPay.Event.CloseDialog, () => {
+  // Ваш код, который выполнится после того как пользователь закрыл окно оплаты MTS Pay. 
+  console.info('Пользователь закрыл окно оплаты');
+});
+```
+
+
+### MtsPay.Event.UnfinishedOperation
+Пользователь закрыл окно в момент опроса статуса оплаты. Т.е. оплата могла пройти успешно, однако пользователь недождался экрана с подтверждением этой информации.<br>
+Пример:
+```js
+mtsPaySession.on(MtsPay.Event.UnfinishedOperation, () => {
+  // Ваш код, который выполнится после того как пользователь закрыл окно оплаты MTS Pay в момент опроса статуса оплаты
+  console.info('Пользователь закрыл окно в момент опроса статуса оплаты');
+});
+
+```
+
+
+### MtsPay.Event.ChangePaymentStatus
+Изменение статуса оплаты. Принимает параметры `status` и `orderId`
+Для корректного определения статуса рекомендуется использовать метод `MtsPay.PendingStatuses.includes(status)` и `MtsPay.SuccessfulStatuses.includes(status)` <br>
+`orderId` - id заказа внутри платежного шлюза МТС-Банка.<br>
+
+Пример:
+```js
+mtsPaySession.on(MtsPay.Event.ChangePaymentStatus, ({ status, orderId }) => {
+
+  if (MtsPay.PendingStatuses.includes(status)) {
+    console.log('🕒️ Завершение операции.');
+    
+  } else if (MtsPay.SuccessfulStatuses.includes(status)) {
+    console.log('✔️ Оплата выполнена УСПЕШНО.');
+    
+  } else {
+    console.log('❌ Оплата выполнена НЕУСПЕШНО.');
+  }
+  
+  console.log(`Статус заказа: ${status}. Номер заказа ${orderId}`);
+});
+```
+
+## Определения статуса платежа
+Для корректного и честного определения, что оплата по MTS Pay прошла рекомендуется делать реализацию через бек-офиc (backend).
+
+### payment/status.do
+
+Например, после того, как вы получили событие `MtsPay.Event.ChangePaymentStatus`, что оплата выполнена успешно,  <br>
+магазин должен через backend сделать **POST** запрос с заголовком `Content-Type: application/json` и телом запроса `mdOrder: <orderId>,
+<br> где `<orderId>` - id заказа в платежном шлюзе. 
+Его можно получить, либо через `MtsPay.Event.ChangePaymentStatus`,  <br>
+либо взять из QUERY-параметра `orderId` для `successUrl / failUrl`.
+Запрос делается на следующий адрес: <br>
+
+**Для тестовой среды**
+```
+https://web.rbsuat.com/mtspay/payment/status.do
+```
+
+**Для продуктовой среды**
+```
+https://oplata.mtsbank.ru/mtspay/payment/status.do
+```
+
+### Поля ответа
+
+<i class="param">success</i><mark class="boolean"></mark>
+
+<i class="param">error</i><mark class="object"></mark>
+
+<div class="indent">
+<i class="param">code</i><mark class="string"></mark>
+
+<i class="param">message</i><mark class="string"></mark>
+</div>
+
+<i class="param">data</i><mark class="object"></mark>
+
+<div class="indent">
+<i class="param">status</i><mark class="string"></mark>
+</div>
 
 ## Тестовые данные для проверки
 **Номер телефона** для проверки `9000000000` <br>
