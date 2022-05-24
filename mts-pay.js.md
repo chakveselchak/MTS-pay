@@ -161,7 +161,7 @@ MTS Pay - собой способ оплаты на сайте в виде ст�
 </script>
 ```
 
-MTS Pay асинхронно инициализируется, поэтому вся работа со модулем происходит в функции `window.mtsPayModule.OnReady((MtsPay) => {...})`
+MTS Pay асинхронно инициализируется, поэтому вся работа со модулем происходит в функции <br> `window.mtsPayModule.OnReady((MtsPay) => {...})`
 
 #### 3.1 Рендер кнопки
 Для отрисовки кнопки требуется вызвать функцию `MtsPay.createButtonElement`
@@ -212,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
 `арендовать`
 `подписаться`
 `поддержать`
-`поддержать`
 `book`
 `buy`
 `continue`
@@ -225,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ##### Пример стилизованной кнопки
 
 ```js
-<div id ="example2"></div>
+<div id="example2"></div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 	window.mtsPayModule.onReady((MtsPay) => {
@@ -242,6 +241,45 @@ document.addEventListener('DOMContentLoaded', () => {
 	window.mtsPayModule.onReady((MtsPay) => {
 		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
 		document.querySelector('#example2').append(mtsPayButtonElement);
+	});
+});
+</script>
+<hr>
+
+<div class="container container-center">
+  <select id="btnColor">
+    <option value="red">red</option>
+    <option value="black">black</option>
+    <option value="white">white</option>
+  </select>
+  <select id="btnText">
+    <option value="забронировать">забронировать</option>
+    <option value="купить">купить</option>
+    <option value="продолжить">продолжить</option>
+    <option value="заказать">заказать</option>
+    <option value="оплатить">оплатить</option>
+    <option value="арендовать">арендовать</option>
+    <option value="подписаться">подписаться</option>
+    <option value="поддержать">поддержать</option>
+    <option value="book">book</option>
+    <option value="buy">buy</option>
+    <option value="continue">continue</option>
+    <option value="order">order</option>
+    <option value="pay">pay</option>
+    <option value="rent">rent</option>
+    <option value="subscribe">subscribe</option>
+    <option value="support">support</option>
+  </select>
+</div>
+<div id="exampleStyleButton"></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+
+
+	window.mtsPayModule.onReady((MtsPay) => {
+		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
+		document.querySelector('#exampleStyleButton').append(mtsPayButtonElement);
 	});
 });
 </script>
@@ -274,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 При инициализации сессии, кнопка становится кликабельной.
 
-<div id ="example3"></div>
+<div id="example3"></div>
 
 <script>
     window.mtsPayModule.onReady((MtsPay) => {
@@ -514,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-<div id ="example4"></div>
+<div id="example4"></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -714,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-<div id ="example5"></div>
+<div id="example5"></div>
 <script>
 const bgColors = [
   "linear-gradient(to right, #00b09b, #96c93d)",
