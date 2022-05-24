@@ -6,6 +6,7 @@
       {
         "id": "804e2c641e30290f",
         "type": "leaf",
+        "dimension": 60.50753370340999,
         "state": {
           "type": "markdown",
           "state": {
@@ -18,6 +19,7 @@
       {
         "id": "30726fbccd705c0d",
         "type": "leaf",
+        "dimension": 39.49246629659001,
         "state": {
           "type": "markdown",
           "state": {
@@ -118,7 +120,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 301
   },
   "active": "804e2c641e30290f",
   "lastOpenFiles": [

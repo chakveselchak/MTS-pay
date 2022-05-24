@@ -96,7 +96,35 @@
     content: "необязательное";
   }
 .toastify {
-  font-size: 12px;
+	font-size: 12px;
+}
+#exampleStyleButton {
+	width: 100%;
+	height: 80px;
+	border-radius: 12px;
+	text-align: center;
+	background-color: #ffffff;
+	display: flex;
+	align-content: center;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: space-around;
+}
+hr {
+	background-color: #ececec;
+}
+#exampleStyleButton.dark-background {
+	background-color: #2c2c2c;
+}
+.container-center {
+  margin: 0 auto;
+  text-align: center;
+}
+select {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #acacac;
+  text-align: center;
 }
 </style>
 
@@ -204,14 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 Текст внутри кнопки. Может принимать значения:
 
-`забронировать`
-`купить`
-`продолжить`
-`заказать`
-`оплатить`
-`арендовать`
-`подписаться`
-`поддержать`
 `book`
 `buy`
 `continue`
@@ -252,15 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <option value="black">black</option>
     <option value="white">white</option>
   </select>
-  <select id="btnText">
-    <option value="забронировать">забронировать</option>
-    <option value="купить">купить</option>
-    <option value="продолжить">продолжить</option>
-    <option value="заказать">заказать</option>
-    <option value="оплатить">оплатить</option>
-    <option value="арендовать">арендовать</option>
-    <option value="подписаться">подписаться</option>
-    <option value="поддержать">поддержать</option>
+  <select id="btnText" value="subscribe">
+    <option value=""></option>
     <option value="book">book</option>
     <option value="buy">buy</option>
     <option value="continue">continue</option>
@@ -273,15 +286,30 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 <div id="exampleStyleButton"></div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+var btnColor = document.getElementById('btnColor');
+var btnText = document.getElementById('btnText');
 
+btnColor.addEventListener('change', renderButton);
+btnText.addEventListener('change', renderButton);
 
+document.addEventListener('DOMContentLoaded', renderButton)
 
+function renderButton() {
+	document.querySelector('#exampleStyleButton').innerHTML = "";
+	var color = btnColor.value;
+	var text = btnText.value;
+	if (color === 'white') {
+		document.querySelector('#exampleStyleButton').classList.add('dark-background');
+	} else {
+		document.querySelector('#exampleStyleButton').classList.remove('dark-background');
+	}
+	
 	window.mtsPayModule.onReady((MtsPay) => {
-		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: 'black', phrase: 'Подписаться'});
+		const mtsPayButtonElement = MtsPay.createButtonElement({ theme: color, phrase: text });
 		document.querySelector('#exampleStyleButton').append(mtsPayButtonElement);
 	});
-});
+}
+
 </script>
 
 #### 3.2 Передача параметров платежа
@@ -615,11 +643,11 @@ MTS Pay имеет внутренние события для более гиб�
 Событие нужно передавать как параметр в функцию `mtsPaySession.on()`
 
 
-### MtsPay.Event.ClickButton
+### MtsPay.Event.openDialog
 Пользователь нажал кнопку оплаты MTS Pay. <br>
 Пример:
 ```js
-mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+mtsPaySession.on(MtsPay.Event.openDialog, () => {
   // Ваш код, который выполнится после того как пользователь нажал кнопку оплаты MTS Pay
   console.info('Пользователь нажал кнопку оплаты');
 });
@@ -676,14 +704,13 @@ mtsPaySession.on(MtsPay.Event.ChangePaymentStatus, ({ status, orderId }) => {
 const bgColors = [
   "linear-gradient(to right, #00b09b, #96c93d)",
   "linear-gradient(to right, #ff5f6d, #ffc371)",
-  "linear-gradient(to right, #43514f, #7f9492)",
+  "linear-gradient(to right, #9a9a9a, #bdbdbd)",
 ];
 
 function showToast(text, colorIndex) {
   Toastify({
     text: text,
-    duration: 6000,
-    
+    close: true,
     style: {
       background: bgColors[colorIndex],
     }
@@ -729,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Статус заказа: ${status}. Номер заказа ${orderId}`, 2);
       });
 
-      mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+      mtsPaySession.on(MtsPay.Event.openDialog, () => {
         showToast('Пользователь нажал кнопку оплаты', 2);
       });
 
@@ -757,13 +784,14 @@ document.addEventListener('DOMContentLoaded', () => {
 const bgColors = [
   "linear-gradient(to right, #00b09b, #96c93d)",
   "linear-gradient(to right, #ff5f6d, #ffc371)",
-  "linear-gradient(to right, #43514f, #7f9492)",
+  "linear-gradient(to right, #9a9a9a, #bdbdbd)",
 ];
 
 function showToast(text, colorIndex) {
   Toastify({
     text: text,
-    duration: 3000,
+    close: true,
+    duration: -1,
     style: {
       background: bgColors[colorIndex],
     }
@@ -809,7 +837,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Статус заказа: ${status}. Номер заказа ${orderId}`, 2);
       });
 
-      mtsPaySession.on(MtsPay.Event.ClickButton, () => {
+      mtsPaySession.on(MtsPay.Event.openDialog, () => {
         showToast('Пользователь нажал кнопку оплаты', 2);
       });
 
@@ -835,8 +863,9 @@ document.addEventListener('DOMContentLoaded', () => {
 ### payment/status.do
 
 Например, после того, как вы получили событие `MtsPay.Event.ChangePaymentStatus`, что оплата выполнена успешно,  <br>
-магазин должен через backend сделать **POST** запрос с заголовком `Content-Type: application/json` и телом запроса `mdOrder: <orderId>,
-<br> где `<orderId>` - id заказа в платежном шлюзе. 
+магазин должен через backend сделать **POST** запрос с заголовком `Content-Type: application/json` и телом запроса `mdOrder: <orderId>`
+
+где `<orderId>` - id заказа в платежном шлюзе. 
 Его можно получить, либо через `MtsPay.Event.ChangePaymentStatus`,  <br>
 либо взять из QUERY-параметра `orderId` для `successUrl / failUrl`.
 Запрос делается на следующий адрес: <br>
