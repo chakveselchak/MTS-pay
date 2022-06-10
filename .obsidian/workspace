@@ -6,20 +6,21 @@
       {
         "id": "804e2c641e30290f",
         "type": "leaf",
-        "dimension": 60.50753370340999,
+        "dimension": 57.99120234604106,
         "state": {
           "type": "markdown",
           "state": {
             "file": "mts-pay.js.md",
             "mode": "source",
-            "source": true
+            "source": false
           }
-        }
+        },
+        "group": "891a8abd0d77dbe1"
       },
       {
         "id": "30726fbccd705c0d",
         "type": "leaf",
-        "dimension": 39.49246629659001,
+        "dimension": 42.00879765395894,
         "state": {
           "type": "markdown",
           "state": {
@@ -27,7 +28,8 @@
             "mode": "preview",
             "source": false
           }
-        }
+        },
+        "group": "891a8abd0d77dbe1"
       }
     ],
     "direction": "vertical"
@@ -67,7 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 196
   },
   "right": {
     "id": "59134d20e0900902",
@@ -114,9 +116,17 @@
                 "useHierarchy": false
               }
             }
+          },
+          {
+            "id": "3718a836545784eb",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -125,7 +135,7 @@
   "active": "804e2c641e30290f",
   "lastOpenFiles": [
     "mts-pay.js.md",
-    "readme.md",
-    "3.1.md"
+    "3.1.md",
+    "readme.md"
   ]
 }

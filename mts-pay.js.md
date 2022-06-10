@@ -14,10 +14,37 @@
   p {
     font-size: 0.9em;
   }
+input[type="number"],input[type="text"] {
+	padding: 4px 7px;
+	margin: 0 3px;
+}
+.button {
+  padding: 5px 7px;
+  background-color: #fff;
+  border: 1px solid #909090;
+  border-radius: 5px;
+  background: rgb(242,242,242);
+  background: linear-gradient(1deg, rgba(242,242,242,1) 0%, rgb(239 239 239) 35%, rgba(255,255,255,1) 100%);
+  cursor: pointer;
+}
+.button:hover {
+    background: linear-gradient(1deg, rgb(244 244 244) 0%, rgb(255 255 255) 35%, rgba(255,255,255,1) 100%);
+}
   .indent {
-    padding-left: 30px;
+    padding-left: 15px;
+    margin-left: 15px;
     border-left: 1px solid #f1f1f1;
   }
+.indent i.param:before {
+    content: '';
+    display: table;
+    width: 11px;
+    position: absolute;
+    color: #d7d7d7;
+    left: -16px;
+    top: 17px;
+    border-bottom: 1px solid #e6e6e6;
+}
   p > code, h3 > code, h4 > code, h5 > code, h6 > code {
 	color: #ae1212;
 	background-color: rgb(188, 188,188, .15);
@@ -39,6 +66,7 @@
     display: inline-block;
     margin-top: 0.9em;
     font-style: normal;
+    position: relative;
   }
   blockquote {
   margin: 0;
@@ -141,6 +169,8 @@ select {
 		- [Параметры `new MtsPay({})`](#параметры-new-mtspay)
 		- [Пример MTS Pay c корзиной](#пример-mts-pay-c-корзиной)
 - [События MTS Pay](#cобытия-mts-pay)
+- [mtsPaySession.updateOrder() - Обновление информации в сессии](#mtspaysession.updateorder---обновление-информации-в-сессии)
+- [mtsPaySession.destroy() - демонтаж кнопки](#mtspaysession.destroy---демонтаж-кнопки)
 - [Определения статуса платежа](#определения-статуса-платежа)
 - [Тестовые данные для проверки](#тестовые-данные-для-проверки)
 
@@ -857,6 +887,174 @@ document.addEventListener('DOMContentLoaded', () => {
 }); 
 </script>
 
+
+## mtsPaySession.updateOrder() - обновление информации в сессии
+Иногда требуется без перезагрузки страницы обновить информацию о цене, составе корзины, описания прямо в реальном времени. Для этого можно использовать метод `.updateOrder()`
+
+Пример:
+```html
+<div id="controls" style="margin-bottom: 20px">
+
+Сумма (в копейках): <input type="number" name="amount" value="9900" /><button type="button" id="apply">Изменить сумму</button>
+
+</div>
+
+
+<div id="example6"></div>
+
+
+<script id="main-script">
+document.addEventListener('DOMContentLoaded', () => {
+  window.mtsPayModule.onReady((MtsPay) => {
+    const mtsPayButtonElement = MtsPay.createButtonElement();
+    document.querySelector('#example6').append(mtsPayButtonElement);
+
+    const mtsPaySession = new MtsPay({
+      buttonElement: mtsPayButtonElement,
+      merchant: {
+        login: 'mtsPayTestMerchant',
+      },
+      order: {
+        description: 'Тестовый заказ',
+        orderNumber: new Date().getTime().toString(),
+        amount: Number(document.querySelector('[name="amount"]').value),
+      },
+    });
+
+    mtsPaySession.init();
+
+    document.querySelector('#apply').addEventListener('click', () => {
+      mtsPaySession.updateOrder({
+        ...mtsPaySession.options.order,
+        amount: Number(document.querySelector('[name="amount"]').value),
+      });
+    });
+  });
+});
+</script>
+```
+
+<div id="controls" style="margin-bottom: 20px">
+Сумма (в копейках): <input type="number" name="amount" value="9900" /><button type="button" id="apply" class="button" >Изменить сумму</button>
+</div>
+
+
+<div id="example6"></div>
+
+<script id="main-script">
+document.addEventListener('DOMContentLoaded', () => {
+  window.mtsPayModule.onReady((MtsPay) => {
+    const mtsPayButtonElement = MtsPay.createButtonElement();
+    document.querySelector('#example6').append(mtsPayButtonElement);
+
+    const mtsPaySession = new MtsPay({
+      buttonElement: mtsPayButtonElement,
+      merchant: {
+        login: 'mtsPayTestMerchant',
+      },
+      order: {
+        description: 'Тестовый заказ',
+        orderNumber: new Date().getTime().toString(),
+        amount: Number(document.querySelector('[name="amount"]').value),
+      },
+    });
+
+    mtsPaySession.init();
+
+    document.querySelector('#apply').addEventListener('click', () => {
+      mtsPaySession.updateOrder({
+        ...mtsPaySession.options.order,
+        amount: Number(document.querySelector('[name="amount"]').value),
+      });
+    });
+  });
+});
+
+</script>
+
+## mtsPaySession.destroy() - демонтаж кнопки
+Метод `mtsPaySession.destroy()` используется для корректного удаления кнопки из DOM-дерева.
+
+Пример:
+```html
+<div id="controls" style="margin-bottom: 20px">
+  <button type="button" id="destroy">mtsPay.destroy()</button>
+  <button type="button" id="destroyRemoveButton">mtsPay.destroy({removeButton: true})</button>
+</div>
+
+<div id="example7"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.mtsPayModule.onReady((MtsPay) => {
+      const mtsPayButtonElement = MtsPay.createButtonElement();
+      document.querySelector('#example7').append(mtsPayButtonElement);
+
+      const mtsPaySession = new MtsPay({
+        buttonElement: mtsPayButtonElement,
+        merchant: {
+          login: 'mtsPayTestMerchant',
+        },
+        order: {
+          description: 'Тестовый заказ',
+          orderNumber: '12345',
+          amount: 5500,
+        },
+      });
+
+      mtsPaySession.init();
+
+      document.querySelector('#destroy').addEventListener('click', () => {
+        mtsPaySession.destroy();
+      });
+
+      document.querySelector('#destroyRemoveButton').addEventListener('click', () => {
+        mtsPaySession.destroy({ removeButton: true });
+      });
+    })
+  });
+</script>
+```
+
+
+<div id="controls" style="margin-bottom: 20px">
+  <button type="button" class="button" id="destroy">mtsPay.destroy()</button>
+  <button type="button" class="button"  id="destroyRemoveButton">mtsPay.destroy({removeButton: true})</button>
+</div>
+
+<div id="example7"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.mtsPayModule.onReady((MtsPay) => {
+      const mtsPayButtonElement = MtsPay.createButtonElement();
+      document.querySelector('#example7').append(mtsPayButtonElement);
+
+      const mtsPaySession = new MtsPay({
+        buttonElement: mtsPayButtonElement,
+        merchant: {
+          login: 'mtsPayTestMerchant',
+        },
+        order: {
+          description: 'Тестовый заказ',
+          orderNumber: '12345',
+          amount: 5500,
+        },
+      });
+
+      mtsPaySession.init();
+
+      document.querySelector('#destroy').addEventListener('click', () => {
+        mtsPaySession.destroy();
+      });
+
+      document.querySelector('#destroyRemoveButton').addEventListener('click', () => {
+        mtsPaySession.destroy({ removeButton: true });
+      });
+    })
+  });
+</script>
+
+
 ## Определения статуса платежа
 Для корректного и честного определения, что оплата по MTS Pay прошла рекомендуется делать реализацию через бек-офиc (backend).
 
@@ -867,7 +1065,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 где `<orderId>` - id заказа в платежном шлюзе. 
 Его можно получить, либо через `MtsPay.Event.ChangePaymentStatus`,  <br>
-либо взять из QUERY-параметра `orderId` для `successUrl / failUrl`.
+либо взять из QUERY-параметра `orderId` для `successUrl` / `failUrl`.
 Запрос делается на следующий адрес: <br>
 
 **Для тестовой среды**

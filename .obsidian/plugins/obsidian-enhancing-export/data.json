@@ -82,10 +82,11 @@
   ],
   "defaultExportDirectoryMode": "Auto",
   "openExportedFile": true,
-  "version": "1.0.6",
+  "version": "1.0.7",
   "showOverwriteConfirmation": false,
   "lastExportDirectory": {
     "darwin": "/Users/andreykuznetsov/Documents"
   },
-  "lastExportType": "Html"
+  "lastExportType": "Html",
+  "lastEditName": "Html"
 }

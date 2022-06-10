@@ -1,9 +1,8 @@
 [
   "obsidian-enhancing-export",
-  "obsidian-html-tags-autocomplete",
   "copy-as-html",
   "obsidian-dynamic-toc",
   "obsidian-plugin-toc",
-  "table-editor-obsidian",
-  "obsidian-markdown-formatting-assistant-plugin"
+  "obsidian-style-settings",
+  "table-editor-obsidian"
 ]
